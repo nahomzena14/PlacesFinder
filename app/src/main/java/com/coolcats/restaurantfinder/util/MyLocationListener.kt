@@ -1,4 +1,4 @@
-package com.coolcats.restaurantfinder
+package com.coolcats.restaurantfinder.util
 
 import android.location.Location
 import android.location.LocationListener
