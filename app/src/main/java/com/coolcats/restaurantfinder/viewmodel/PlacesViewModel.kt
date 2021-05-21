@@ -30,10 +30,10 @@ class PlacesViewModel: ViewModel() {
         netJob = viewModelScope.launch(Dispatchers.IO) {
             try {
 
-                val type = currentTypeSelected
+                Log.d("TAG_X", "$currentTypeSelected TYPEEE")
 
                 val result = retrofit.makeApiCallAsync(
-                    type,
+                    currentTypeSelected,
                     "",
                     location.toFormattedString(),
                     10000

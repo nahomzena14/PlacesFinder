@@ -7,6 +7,7 @@ import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -28,31 +29,34 @@ class MainActivity : AppCompatActivity() {
     private var myLocation: Location? = null
     private lateinit var spinner:Spinner
     private lateinit var currentTypeSelected:String
+    val types:List<String> = listOf("restaurant","cafe","supermarket","bakery")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        currentTypeSelected = types[0] //default type
 
-        //spinner
-        val types:List<String> = listOf("restaurant","cafe","supermarket","bakery")
-        currentTypeSelected =types[0]
+        //set up spinner
         val spinnerAdapter = ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item,types)
         spinner = spinner_
         spinner.adapter = spinnerAdapter
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        //observe state
+        //observe app's state
         viewModel.statusData.observe(this,{
             statusControl(it)
         })
 
         val adapter = LocationAdapter()
         recyclerview.adapter = adapter
+
         //observe list of places
         viewModel.liveData.observe(this, {
             adapter.updateList(it)
         })
+
+        //get type selected from spinner and make a new api call
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -60,10 +64,14 @@ class MainActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                //get type selected from spinner and make a new api call
-                myLocation?.let { makeApiCall(it,types[position]).also {
-                    currentTypeSelected = types[position]
-                } }
+                //Log.d("TAG_X", "selected "+ types[position])
+                currentTypeSelected = types[position]
+
+                //TODO:: my location becomes null after spinner selects
+                Log.d("TAG_X", myLocation.toString())
+                myLocation?.let {
+                    makeApiCall(it)
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -91,18 +99,22 @@ class MainActivity : AppCompatActivity() {
     private val myLocationListener = MyLocationListener(
         object: MyLocationListener.LocationDelegate {
             override fun provideLocation(location: Location) {
-                makeApiCall(location,currentTypeSelected)
+                makeApiCall(location)
             }
         }
     )
 
-    private fun makeApiCall(location: Location,type:String) {
+    private fun makeApiCall(location: Location) {
+        //get current location
+
         Geocoder(this, Locale.getDefault()).getFromLocation(location.latitude, location.longitude, 1)
             .also { it[0].getAddressLine(0).let { it ->
                 currentlocation_textView.text= it
             }}
         myLocation?.set(location)
+        currentTypeSelected = currentTypeSelected
         viewModel.getPlacesNearMe(location,currentTypeSelected)
+
     }
 
     @SuppressLint("MissingPermission")
