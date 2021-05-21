@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var locationManager: LocationManager
     private val viewModel: PlacesViewModel by viewModels()
-    private var myLocation: Location? = null
+    lateinit var myLocation: Location
     private lateinit var spinner:Spinner
     private lateinit var currentTypeSelected:String
     val types:List<String> = listOf("restaurant","cafe","supermarket","bakery")
@@ -67,11 +67,9 @@ class MainActivity : AppCompatActivity() {
                 //Log.d("TAG_X", "selected "+ types[position])
                 currentTypeSelected = types[position]
 
-                //TODO:: my location becomes null after spinner selects
-                Log.d("TAG_X", myLocation.toString())
-                myLocation?.let {
-                    makeApiCall(it)
-                }
+                //TODO::
+                if(this@MainActivity::myLocation.isInitialized)
+                    makeApiCall(myLocation)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -99,7 +97,8 @@ class MainActivity : AppCompatActivity() {
     private val myLocationListener = MyLocationListener(
         object: MyLocationListener.LocationDelegate {
             override fun provideLocation(location: Location) {
-                makeApiCall(location)
+                myLocation = location
+                makeApiCall(myLocation)
             }
         }
     )
@@ -111,8 +110,6 @@ class MainActivity : AppCompatActivity() {
             .also { it[0].getAddressLine(0).let { it ->
                 currentlocation_textView.text= it
             }}
-        myLocation?.set(location)
-        currentTypeSelected = currentTypeSelected
         viewModel.getPlacesNearMe(location,currentTypeSelected)
 
     }

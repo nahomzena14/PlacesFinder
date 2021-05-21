@@ -29,9 +29,6 @@ class PlacesViewModel: ViewModel() {
 
         netJob = viewModelScope.launch(Dispatchers.IO) {
             try {
-
-                Log.d("TAG_X", "$currentTypeSelected TYPEEE")
-
                 val result = retrofit.makeApiCallAsync(
                     currentTypeSelected,
                     "",
@@ -44,7 +41,6 @@ class PlacesViewModel: ViewModel() {
 
             } catch (e: Exception) {
                 //At this point an error occurred
-                Log.d("TAG_X", e.toString())
                 statusData.postValue(AppState.ERROR)
             }
 

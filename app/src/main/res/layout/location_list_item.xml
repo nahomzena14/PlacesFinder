@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     app:cardElevation="4dp"
+    android:padding="16dp"
    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,17 +22,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="PLACE NAME"
-            android:layout_margin="16dp"
+            android:layout_marginLeft="16dp"
             android:textColor="@color/white"/>
 
         <TextView
             android:id="@+id/location_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name_textview"
             tools:text="LOCATION"
+            android:layout_margin="16dp"
+            android:textColor="@color/white"/>
+        <TextView
+            android:id="@+id/rating_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/location_textview"
+            tools:text="RATING"
+            android:layout_margin="16dp"
+            android:textColor="@color/white"/>
+        <TextView
+            android:id="@+id/hours_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rating_textview"
+            tools:text="HOURS"
             android:layout_margin="16dp"
             android:textColor="@color/white"/>
 

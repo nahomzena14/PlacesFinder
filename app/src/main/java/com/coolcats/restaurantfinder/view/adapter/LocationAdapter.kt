@@ -27,11 +27,16 @@ class LocationAdapter:RecyclerView.Adapter<LocationAdapter.LocationViewHolder>()
 
         list[position].let {
             holder.itemView.apply {
-                name_textview.text= it.name
+                name_textview.text = it.name
                 location_textview.text = it.vicinity
+                rating_textview.text = "Rating:" + it.rating.toString()
+                if (it.opening_hours.open_now)
+                    hours_textview.text = "Open Now"
+                else
+                    hours_textview.text = "Closed Now"
+
             }
         }
-
     }
 
     override fun getItemCount(): Int {
